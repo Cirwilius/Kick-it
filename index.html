@@ -1403,6 +1403,13 @@ var GameEngine = /*#__PURE__*/function () {
           jumpForce: PLAYER_JUMP
         },
         is2v2: false,
+        p2IsTeammate: false,
+        lastTouchTime: null,
+        lastTouchedBy: 0,
+        acrobatEventFired: false,
+        peacemakerEventFired: false,
+        resetPending: false,
+        resetFrames: 0,
         ball: {
           pos: {
             x: GAME_WIDTH / 2,
@@ -1477,6 +1484,10 @@ var GameEngine = /*#__PURE__*/function () {
       this.state.isGoal = false;
       this.state.lastScorer = 0;
       this.state.kickoffFrames = 60;
+      this.state.lastTouchTime = null;
+      this.state.lastTouchedBy = 0;
+      this.state.acrobatEventFired = false;
+      this.state.peacemakerEventFired = false;
     }
   }, {
     key: "update",
@@ -1812,7 +1823,7 @@ var GameEngine = /*#__PURE__*/function () {
     key: "checkGoal",
     value: function checkGoal(onSound) {
       var goalTopY = GROUND_Y - GOAL_HEIGHT;
-      if (this.state.ball.pos.y > goalTopY + this.state.ball.radius * 0.5) {
+      if (this.state.ball.pos.y + this.state.ball.radius > goalTopY) {
         if (this.state.ball.pos.x < GOAL_WIDTH) {
           this.handleGoal(2, onSound);
         } else if (this.state.ball.pos.x > GAME_WIDTH - GOAL_WIDTH) {
@@ -2775,15 +2786,15 @@ var GameCanvas = function GameCanvas() {
                 }
               }
               if (!isGameOver) {
-                if (!engineRef.current['resetPending']) {
-                  engineRef.current['resetPending'] = true;
-                  engineRef.current['resetFrames'] = 120;
+                if (!engine.state.resetPending) {
+                  engine.state.resetPending = true;
+                  engine.state.resetFrames = 120;
                 } else {
-                  if (engineRef.current['resetFrames'] > 0) {
-                    engineRef.current['resetFrames']--;
+                  if (engine.state.resetFrames > 0) {
+                    engine.state.resetFrames--;
                   } else {
                     engine.resetPositions();
-                    engineRef.current['resetPending'] = false;
+                    engine.state.resetPending = false;
                     setScore(_objectSpread({}, engine.state.score));
                     if (isOnlineRef.current && isHostRef.current) {
                       broadcastToClients({
