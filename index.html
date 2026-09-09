@@ -4818,7 +4818,9 @@ var _useState5 = useState('MAIN'),
       setMenuState('MAIN');
     },
     className: "mt-2 text-slate-400 hover:text-white font-bold text-sm uppercase tracking-wider py-2"
-  }, "\u2190 ", t('back')))), status === 'PAUSED' && /*#__PURE__*/React.createElement("div", {
+  }, "\u2190 ", t('back'))), showTournamentBracket && /*#__PURE__*/React.createElement(TournamentBracket, {
+    engine: tournamentEngineRef.current
+  }), status === 'PAUSED' && /*#__PURE__*/React.createElement("div", {
     className: "absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center z-40 transition-opacity duration-300 ease-out overflow-y-auto py-6 ".concat(isExiting ? 'opacity-0' : 'opacity-100')
   }, /*#__PURE__*/React.createElement("div", {
     className: "min-h-full flex flex-col items-center justify-center my-auto"
